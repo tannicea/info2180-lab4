@@ -63,10 +63,29 @@ $superheroes = [
   ], 
 ];
 
-?>
+$query = isset($_GET['query']) ? trim(strip_tags($_GET['query'])) : '';
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+if ($query !== '') {
+    $found = null;
+    foreach ($superheroes as $hero) {
+        if (strcasecmp($hero['name'], $query) === 0 || strcasecmp($hero['alias'], $query) === 0) {
+            $found = $hero;
+            break;
+        }
+    }
+
+    if ($found) {
+        echo "<h3>" . htmlspecialchars($found['alias']) . "</h3>";
+        echo "<h4>A.K.A. " . htmlspecialchars($found['name']) . "</h4>";
+        echo "<p>" . htmlspecialchars($found['biography']) . "</p>";
+    } else {
+        echo "<p style='color: #ff4b2b; font-weight: bold;'>SUPERHERO NOT FOUND</p>";
+    }
+} else {
+    echo "<ul>";
+    foreach ($superheroes as $superhero) {
+        echo "<li>" . htmlspecialchars($superhero['alias']) . "</li>";
+    }
+    echo "</ul>";
+}
+?>
